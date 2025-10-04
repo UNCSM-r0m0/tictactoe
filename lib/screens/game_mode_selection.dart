@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../models/game_state.dart';
 import 'tic_tac_toe_game.dart';
+import 'statistics_screen.dart';
 
 class GameModeSelection extends ConsumerStatefulWidget {
   const GameModeSelection({super.key});
@@ -27,6 +28,27 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             const TicTacToeGameScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: animation.drive(
+              Tween(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).chain(CurveTween(curve: Curves.easeInOut)),
+            ),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+    );
+  }
+
+  void _navigateToStatistics() {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const StatisticsScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SlideTransition(
             position: animation.drive(
@@ -84,9 +106,7 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
                       title: 'Estadísticas',
                       icon: Iconsax.chart,
                       color: const Color(0xFFFFD54F),
-                      onTap: () {
-                        // TODO: Implementar estadísticas
-                      },
+                      onTap: () => _navigateToStatistics(),
                     ),
                   ],
                 ),
@@ -101,10 +121,10 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
   Widget _buildHeader() {
     return Column(
       children: [
-        // Tablero de ejemplo con X y O
+        // Tablero de ejemplo con X y O (más grande y responsivo)
         Container(
-              width: 120,
-              height: 120,
+              width: MediaQuery.of(context).size.width * 0.35,
+              height: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: const Color(0xFF1A1F3A),
                 borderRadius: BorderRadius.circular(20),
@@ -168,6 +188,30 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
               duration: const Duration(milliseconds: 800),
               curve: Curves.elasticOut,
             ),
+
+        const SizedBox(height: 20),
+
+        // Título de la aplicación
+        Text(
+          'TIC TAC TOE',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: MediaQuery.of(context).size.width * 0.08,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2,
+          ),
+        ).animate().fadeIn(duration: 1200.ms).slideY(begin: 0.3, end: 0),
+
+        const SizedBox(height: 8),
+
+        Text(
+          'Selecciona tu modo de juego',
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: MediaQuery.of(context).size.width * 0.04,
+            fontWeight: FontWeight.w300,
+          ),
+        ).animate().fadeIn(duration: 1500.ms).slideY(begin: 0.3, end: 0),
       ],
     );
   }
@@ -182,7 +226,7 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
           onTap: onTap,
           child: Container(
             width: double.infinity,
-            height: 60,
+            height: MediaQuery.of(context).size.height * 0.08,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [color, color.withOpacity(0.7)],
@@ -201,13 +245,17 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, color: Colors.white, size: 24),
-                const SizedBox(width: 12),
+                Icon(
+                  icon,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.width * 0.06,
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -243,126 +291,167 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
   void _showDifficultyDialog() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.8),
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1F3A),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFF2D3748), width: 2),
+        return DifficultySelectionDialog(
+          initialDifficulty: selectedDifficulty,
+          onDifficultySelected: (difficulty) {
+            setState(() {
+              selectedDifficulty = difficulty;
+            });
+          },
+          onStartGame: () {
+            Navigator.of(context).pop();
+            _startGame(GameMode.vsAI);
+          },
+        );
+      },
+    );
+  }
+}
+
+class DifficultySelectionDialog extends StatefulWidget {
+  final AIDifficulty initialDifficulty;
+  final Function(AIDifficulty) onDifficultySelected;
+  final VoidCallback onStartGame;
+
+  const DifficultySelectionDialog({
+    super.key,
+    required this.initialDifficulty,
+    required this.onDifficultySelected,
+    required this.onStartGame,
+  });
+
+  @override
+  State<DifficultySelectionDialog> createState() =>
+      _DifficultySelectionDialogState();
+}
+
+class _DifficultySelectionDialogState extends State<DifficultySelectionDialog> {
+  late AIDifficulty selectedDifficulty;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDifficulty = widget.initialDifficulty;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1F3A),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFF2D3748), width: 2),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Título
+            const Text(
+              'Elegir Dificultad',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+
+            const SizedBox(height: 30),
+
+            // Opciones de dificultad
+            _buildDifficultyOption(
+              'Fácil',
+              AIDifficulty.easy,
+              const Color(0xFF4CAF50),
+            ),
+
+            const SizedBox(height: 16),
+
+            _buildDifficultyOption(
+              'Normal',
+              AIDifficulty.medium,
+              const Color(0xFFFF9800),
+            ),
+
+            const SizedBox(height: 16),
+
+            _buildDifficultyOption(
+              'Difícil',
+              AIDifficulty.hard,
+              const Color(0xFFF44336),
+            ),
+
+            const SizedBox(height: 30),
+
+            // Botones
+            Row(
               children: [
-                // Título
-                const Text(
-                  'Elegir Dificultad',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2D3748),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Cancelar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(width: 16),
 
-                // Opciones de dificultad
-                _buildDifficultyOption(
-                  'Fácil',
-                  AIDifficulty.easy,
-                  const Color(0xFF4CAF50),
-                ),
-
-                const SizedBox(height: 16),
-
-                _buildDifficultyOption(
-                  'Normal',
-                  AIDifficulty.medium,
-                  const Color(0xFFFF9800),
-                ),
-
-                const SizedBox(height: 16),
-
-                _buildDifficultyOption(
-                  'Difícil',
-                  AIDifficulty.hard,
-                  const Color(0xFFF44336),
-                ),
-
-                const SizedBox(height: 30),
-
-                // Botones
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2D3748),
-                            borderRadius: BorderRadius.circular(25),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: widget.onStartGame,
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF4FC3F7), Color(0xFF29B6F6)],
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF4FC3F7).withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
                           ),
-                          child: const Center(
-                            child: Text(
-                              'Cancelar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Continuar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
-
-                    const SizedBox(width: 16),
-
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          _startGame(GameMode.vsAI);
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF4FC3F7), Color(0xFF29B6F6)],
-                            ),
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF4FC3F7).withOpacity(0.3),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'Continuar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 
@@ -375,9 +464,12 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
 
     return GestureDetector(
       onTap: () {
+        print('Seleccionando dificultad: $difficulty');
         setState(() {
           selectedDifficulty = difficulty;
         });
+        widget.onDifficultySelected(difficulty);
+        print('Dificultad seleccionada: $selectedDifficulty');
       },
       child: Container(
         width: double.infinity,
@@ -387,8 +479,17 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
             color: isSelected ? color : const Color(0xFF2D3748),
-            width: 2,
+            width: isSelected ? 3 : 2,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [

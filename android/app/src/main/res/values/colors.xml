@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Color de fondo para el splash screen -->
+    <color name="splash_background">#0A0E27</color>
+    <!-- Color de fondo para el icono adaptativo -->
+    <color name="ic_launcher_background">#0A0E27</color>
+</resources>

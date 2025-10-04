@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
+import 'database/stats_service.dart';
 
 enum Player { x, o }
 
@@ -80,6 +81,7 @@ class GameNotifier extends StateNotifier<GameState> {
   GameNotifier() : super(GameState.initial());
 
   final Random _random = Random();
+  final StatsService _statsService = StatsService();
 
   static const List<List<int>> _winningCombinations = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Filas
@@ -163,6 +165,94 @@ class GameNotifier extends StateNotifier<GameState> {
       state = state.copyWith(xScore: state.xScore + 1);
     } else if (state.winner == Player.o) {
       state = state.copyWith(oScore: state.oScore + 1);
+    }
+
+    // Guardar estadísticas en la base de datos
+    _saveGameStats();
+  }
+
+  Future<void> _saveGameStats() async {
+    if (state.status == GameStatus.won) {
+      // Guardar estadísticas del ganador
+      if (state.winner == Player.x) {
+        if (state.gameMode == GameMode.vsAI) {
+          // Jugador X ganó contra IA
+          await _statsService.updatePlayerStats(
+            playerName: 'Jugador X',
+            playerType: 'human',
+            result: 'won',
+          );
+          await _statsService.updatePlayerStats(
+            playerName: 'IA',
+            playerType: 'ai',
+            result: 'lost',
+          );
+        } else {
+          // Jugador X ganó contra Jugador O
+          await _statsService.updatePlayerStats(
+            playerName: 'Jugador X',
+            playerType: 'human',
+            result: 'won',
+          );
+          await _statsService.updatePlayerStats(
+            playerName: 'Jugador O',
+            playerType: 'human',
+            result: 'lost',
+          );
+        }
+      } else {
+        // Jugador O ganó
+        if (state.gameMode == GameMode.vsAI) {
+          // IA ganó contra Jugador X
+          await _statsService.updatePlayerStats(
+            playerName: 'IA',
+            playerType: 'ai',
+            result: 'won',
+          );
+          await _statsService.updatePlayerStats(
+            playerName: 'Jugador X',
+            playerType: 'human',
+            result: 'lost',
+          );
+        } else {
+          // Jugador O ganó contra Jugador X
+          await _statsService.updatePlayerStats(
+            playerName: 'Jugador O',
+            playerType: 'human',
+            result: 'won',
+          );
+          await _statsService.updatePlayerStats(
+            playerName: 'Jugador X',
+            playerType: 'human',
+            result: 'lost',
+          );
+        }
+      }
+    } else if (state.status == GameStatus.draw) {
+      // Empate - ambos jugadores empatan
+      if (state.gameMode == GameMode.vsAI) {
+        await _statsService.updatePlayerStats(
+          playerName: 'Jugador X',
+          playerType: 'human',
+          result: 'drawn',
+        );
+        await _statsService.updatePlayerStats(
+          playerName: 'IA',
+          playerType: 'ai',
+          result: 'drawn',
+        );
+      } else {
+        await _statsService.updatePlayerStats(
+          playerName: 'Jugador X',
+          playerType: 'human',
+          result: 'drawn',
+        );
+        await _statsService.updatePlayerStats(
+          playerName: 'Jugador O',
+          playerType: 'human',
+          result: 'drawn',
+        );
+      }
     }
   }
 

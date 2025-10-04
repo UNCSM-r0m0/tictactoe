@@ -40,7 +40,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
     final gameState = ref.watch(gameProvider);
     final gameNotifier = ref.read(gameProvider.notifier);
 
-    // Actualizar puntaje cuando hay ganador
+    // Actualizar puntaje cuando hay ganador o empate
     ref.listen<GameState>(gameProvider, (previous, next) {
       if (previous?.status != GameStatus.won && next.status == GameStatus.won) {
         Future.delayed(const Duration(milliseconds: 500), () {
@@ -50,6 +50,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
       } else if (previous?.status != GameStatus.draw &&
           next.status == GameStatus.draw) {
         Future.delayed(const Duration(milliseconds: 500), () {
+          gameNotifier.updateScore(); // ← Agregado para guardar empates
           _showResultDialog(next);
         });
       }
