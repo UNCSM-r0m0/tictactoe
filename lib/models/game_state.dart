@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import 'database/stats_service.dart';
+import '../services/sound_service.dart';
 
 enum Player { x, o }
 
@@ -82,6 +83,7 @@ class GameNotifier extends StateNotifier<GameState> {
 
   final Random _random = Random();
   final StatsService _statsService = StatsService();
+  final SoundService _soundService = SoundService();
 
   static const List<List<int>> _winningCombinations = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Filas
@@ -95,6 +97,9 @@ class GameNotifier extends StateNotifier<GameState> {
         state.isAIThinking) {
       return;
     }
+
+    // Reproducir sonido cuando se selecciona una casilla
+    _soundService.playCellSelectionSound();
 
     final newBoard = List<Player?>.from(state.board);
     newBoard[index] = state.currentPlayer;
@@ -279,6 +284,9 @@ class GameNotifier extends StateNotifier<GameState> {
 
     final aiMove = _getAIMove();
     if (aiMove != -1) {
+      // Reproducir sonido cuando la IA selecciona una casilla
+      _soundService.playCellSelectionSound();
+
       final newBoard = List<Player?>.from(state.board);
       newBoard[aiMove] = Player.o;
 
