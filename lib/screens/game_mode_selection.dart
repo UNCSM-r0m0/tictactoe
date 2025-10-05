@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../models/game_state.dart';
+import '../utils/app_logger.dart';
 import 'tic_tac_toe_game.dart';
 import 'statistics_screen.dart';
 
@@ -229,14 +230,14 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
             height: MediaQuery.of(context).size.height * 0.08,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [color, color.withOpacity(0.7)],
+                colors: [color, color.withValues(alpha: 0.7)],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.3),
+                  color: color.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -292,7 +293,7 @@ class _GameModeSelectionState extends ConsumerState<GameModeSelection> {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.8),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
       builder: (BuildContext context) {
         return DifficultySelectionDialog(
           initialDifficulty: selectedDifficulty,
@@ -428,7 +429,9 @@ class _DifficultySelectionDialogState extends State<DifficultySelectionDialog> {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF4FC3F7).withOpacity(0.3),
+                            color: const Color(
+                              0xFF4FC3F7,
+                            ).withValues(alpha: 0.3),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -464,18 +467,20 @@ class _DifficultySelectionDialogState extends State<DifficultySelectionDialog> {
 
     return GestureDetector(
       onTap: () {
-        print('Seleccionando dificultad: $difficulty');
+        logger.debug('Seleccionando dificultad: $difficulty');
         setState(() {
           selectedDifficulty = difficulty;
         });
         widget.onDifficultySelected(difficulty);
-        print('Dificultad seleccionada: $selectedDifficulty');
+        logger.info('Dificultad seleccionada: $selectedDifficulty');
       },
       child: Container(
         width: double.infinity,
         height: 60,
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : const Color(0xFF0A0E27),
+          color: isSelected
+              ? color.withValues(alpha: 0.2)
+              : const Color(0xFF0A0E27),
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
             color: isSelected ? color : const Color(0xFF2D3748),
@@ -484,7 +489,7 @@ class _DifficultySelectionDialogState extends State<DifficultySelectionDialog> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: color.withOpacity(0.3),
+                    color: color.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:iconsax/iconsax.dart';
-import 'dart:math' as math;
 import 'game_mode_selection.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -69,7 +68,6 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isSmallScreen = screenSize.width < 360;
-    final isMediumScreen = screenSize.width >= 360 && screenSize.width < 600;
 
     return Scaffold(
       body: Stack(
@@ -152,7 +150,10 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         )
         .animate(onPlay: (controller) => controller.repeat())
-        .shimmer(duration: 3000.ms, color: Colors.white.withOpacity(0.03));
+        .shimmer(
+          duration: 3000.ms,
+          color: Colors.white.withValues(alpha: 0.03),
+        );
   }
 
   Widget _buildFloatingParticles() {
@@ -167,11 +168,11 @@ class _SplashScreenState extends State<SplashScreen>
                     width: 4 + (index % 3) * 2,
                     height: 4 + (index % 3) * 2,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.05),
+                          color: Colors.white.withValues(alpha: 0.05),
                           blurRadius: 10,
                           spreadRadius: 2,
                         ),
@@ -218,17 +219,17 @@ class _SplashScreenState extends State<SplashScreen>
                         ],
                       ),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         width: 3,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF4FC3F7).withOpacity(0.2),
+                          color: const Color(0xFF4FC3F7).withValues(alpha: 0.2),
                           blurRadius: 30,
                           spreadRadius: 5,
                         ),
                         BoxShadow(
-                          color: const Color(0xFFFF5252).withOpacity(0.2),
+                          color: const Color(0xFFFF5252).withValues(alpha: 0.2),
                           blurRadius: 30,
                           spreadRadius: 5,
                           offset: const Offset(-10, -10),
@@ -296,7 +297,7 @@ class _SplashScreenState extends State<SplashScreen>
                           (isX
                                   ? const Color(0xFFFF5252)
                                   : const Color(0xFF4FC3F7))
-                              .withOpacity(0.5),
+                              .withValues(alpha: 0.5),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -335,7 +336,7 @@ class _SplashScreenState extends State<SplashScreen>
               height: 1.2,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   offset: const Offset(0, 4),
                   blurRadius: 8,
                 ),
@@ -362,17 +363,20 @@ class _SplashScreenState extends State<SplashScreen>
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
               colors: [
-                Colors.white.withOpacity(0.05),
-                Colors.white.withOpacity(0.02),
+                Colors.white.withValues(alpha: 0.05),
+                Colors.white.withValues(alpha: 0.02),
               ],
             ),
-            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
+            ),
           ),
           child: Text(
             'Juego Clásico de Tres en Raya',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withValues(alpha: 0.85),
               fontSize: fontSize,
               fontWeight: FontWeight.w400,
               letterSpacing: 1.5,
@@ -409,12 +413,12 @@ class _SplashScreenState extends State<SplashScreen>
                 borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.08),
-                    Colors.white.withOpacity(0.03),
+                    Colors.white.withValues(alpha: 0.08),
+                    Colors.white.withValues(alpha: 0.03),
                   ],
                 ),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                   width: 1,
                 ),
               ),
@@ -430,7 +434,7 @@ class _SplashScreenState extends State<SplashScreen>
                   Text(
                     feature['text'] as String,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: isSmallScreen
                           ? screenSize.width * 0.032
                           : screenSize.width * 0.035,
@@ -463,7 +467,7 @@ class _SplashScreenState extends State<SplashScreen>
               valueColor: const AlwaysStoppedAnimation<Color>(
                 Color(0xFF4FC3F7),
               ),
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
             ),
           ),
           // Círculo interior
@@ -489,7 +493,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Text(
           'Cargando experiencia...',
           style: TextStyle(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
             fontSize: isSmallScreen
                 ? screenSize.width * 0.032
                 : screenSize.width * 0.035,
@@ -516,13 +520,16 @@ class _SplashScreenState extends State<SplashScreen>
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.white.withOpacity(0.05),
-            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+            color: Colors.white.withValues(alpha: 0.05),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
+            ),
           ),
           child: Text(
             'v1.0.0 • Premium Edition',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               fontSize: screenSize.width * 0.028,
               fontWeight: FontWeight.w300,
               letterSpacing: 1,
@@ -539,13 +546,13 @@ class EnhancedTicTacToeBoardPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.4)
+      ..color = Colors.white.withValues(alpha: 0.4)
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
     final glowPaint = Paint()
-      ..color = const Color(0xFF4FC3F7).withOpacity(0.3)
+      ..color = const Color(0xFF4FC3F7).withValues(alpha: 0.3)
       ..strokeWidth = 6
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke

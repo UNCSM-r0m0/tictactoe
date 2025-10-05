@@ -148,7 +148,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFF5252).withOpacity(0.3),
+                  color: const Color(0xFFFF5252).withValues(alpha: 0.3),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -206,7 +206,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF4FC3F7).withOpacity(0.3),
+                  color: const Color(0xFF4FC3F7).withValues(alpha: 0.3),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -274,9 +274,9 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -364,7 +364,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
                                 (player == Player.x
                                         ? const Color(0xFFFF5252)
                                         : const Color(0xFF4FC3F7))
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                             blurRadius: 20,
                             spreadRadius: 2,
                           ),
@@ -415,7 +415,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF4CAF50).withOpacity(0.3),
+              color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -474,7 +474,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
 
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.8),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
@@ -484,10 +484,10 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
             decoration: BoxDecoration(
               color: const Color(0xFF1A1F3A),
               borderRadius: BorderRadius.circular(25),
-              border: Border.all(color: color.withOpacity(0.5), width: 2),
+              border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.3),
+                  color: color.withValues(alpha: 0.3),
                   blurRadius: 30,
                   spreadRadius: 5,
                 ),
@@ -501,7 +501,7 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(color: color, width: 2),
                   ),
@@ -578,12 +578,12 @@ class _TicTacToeGameScreenState extends ConsumerState<TicTacToeGameScreen> {
                           height: 50,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [color, color.withOpacity(0.8)],
+                              colors: [color, color.withValues(alpha: 0.8)],
                             ),
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: [
                               BoxShadow(
-                                color: color.withOpacity(0.3),
+                                color: color.withValues(alpha: 0.3),
                                 blurRadius: 20,
                                 offset: const Offset(0, 8),
                               ),

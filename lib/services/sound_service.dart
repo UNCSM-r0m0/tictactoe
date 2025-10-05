@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import '../utils/app_logger.dart';
 
 class SoundService {
   static final SoundService _instance = SoundService._internal();
@@ -11,9 +12,9 @@ class SoundService {
   Future<void> playCellSelectionSound() async {
     try {
       await _audioPlayer.play(AssetSource('sounds/4.mp3'));
-    } catch (e) {
-      // Silenciar errores de audio para no interrumpir el juego
-      print('Error reproduciendo sonido: $e');
+    } catch (e, stackTrace) {
+      // Registrar error pero no interrumpir el juego
+      logger.error('Error reproduciendo sonido', e, stackTrace);
     }
   }
 

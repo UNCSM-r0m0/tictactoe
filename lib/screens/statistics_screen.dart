@@ -209,13 +209,13 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         Icon(
                           Iconsax.chart_2,
                           size: 80,
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
                         const SizedBox(height: 20),
                         Text(
                           'No hay estadísticas disponibles',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontSize: 18,
                           ),
                         ),
@@ -223,7 +223,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         Text(
                           'Juega algunas partidas para ver tus estadísticas',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                             fontSize: 14,
                           ),
                           textAlign: TextAlign.center,
@@ -372,9 +372,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     return Container(
       padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.035),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -467,7 +467,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF0A0E27),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -478,7 +478,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 width: MediaQuery.of(context).size.width * 0.1,
                 height: MediaQuery.of(context).size.width * 0.1,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                   border: Border.all(color: color, width: 2),
                 ),
@@ -519,7 +519,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   vertical: MediaQuery.of(context).size.height * 0.006,
                 ),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
