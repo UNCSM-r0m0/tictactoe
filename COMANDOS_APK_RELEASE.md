@@ -12,6 +12,73 @@ flutter clean
 
 ---
 
+### 🔧 **SOLUCIÓN: Error de Kotlin Daemon al compilar Release**
+
+Si obtienes un error como:
+
+```
+Daemon compilation failed: null
+Could not close incremental caches
+this and base files have different roots
+```
+
+**Sigue estos pasos:**
+
+#### **Opción 1: Limpieza Completa (Recomendado)**
+
+```bash
+# 1. Limpiar Flutter
+flutter clean
+
+# 2. Limpiar Gradle (ejecutar en PowerShell)
+cd android
+./gradlew clean
+cd ..
+
+# 3. Eliminar caché de compilación
+Remove-Item -Recurse -Force build
+
+# 4. Eliminar caché de Gradle (opcional pero efectivo)
+Remove-Item -Recurse -Force android\.gradle
+
+# 5. Eliminar caché del plugin audioplayers
+Remove-Item -Recurse -Force build\audioplayers_android
+
+# 6. Obtener dependencias
+flutter pub get
+
+# 7. Compilar
+flutter build apk --release
+```
+
+#### **Opción 2: Limpieza Rápida**
+
+```bash
+# Limpiar todo y recompilar
+flutter clean && flutter pub get && flutter build apk --release
+```
+
+#### **Opción 3: Si persiste el error**
+
+```bash
+# 1. Limpiar caché completo de Flutter
+flutter clean
+
+# 2. Limpiar caché de Pub
+flutter pub cache clean
+
+# 3. Invalidar caché de Gradle
+cd android
+./gradlew cleanBuildCache
+cd ..
+
+# 4. Recompilar
+flutter pub get
+flutter build apk --release
+```
+
+---
+
 ### 2️⃣ Obtener Dependencias
 
 ```bash
